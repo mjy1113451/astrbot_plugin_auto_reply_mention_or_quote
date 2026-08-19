@@ -1,19 +1,8 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "auto_reply_mention_or_quote",
-  "description": "Astrbot plugin configuration schema",
-  "type": "object",
-  "properties": {
-    "reply_text": {
-      "type": "string",
-      "default": "收到！",
-      "description": "自动回复的文本内容"
-    },
-    "enabled": {
-      "type": "boolean",
-      "default": true,
-      "description": "是否启用自动回复功能"
-    }
-  },
-  "additionalProperties": false
+  "provider": {
+    "type": "string",
+    "description": "选择模型提供商",
+    "hint": "请选择用于生成回复的模型。必须是在 AstrBot 全局配置中已添加的提供商。",
+    "_special": "select_provider"
+  }
 }
