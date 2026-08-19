@@ -4,4 +4,4 @@ desc: 智能检测消息中是否 @ 了机器人自身或引用了机器人自�
 short_desc: @或引用机器人时回复
 author: mjy1113451
 version: 0.01
-repo:
+repo: https://github.com/mjy1113451/astrbot_plugin_auto_reply_mention_or_quote
