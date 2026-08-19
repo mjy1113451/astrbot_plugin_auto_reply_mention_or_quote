@@ -1,0 +1,16 @@
+name: auto_reply_mention_or_quote
+version: 1.0.0
+description: 当机器人被 @ 或被引用时，自动回复指定内容
+author: mjy1113451
+license: MIT
+homepage: https://github.com/mjy1113451/astrbot_plugin_auto_reply_mention_or_quote
+
+conf_schema:
+  reply_text:
+    type: string
+    default: "收到！"
+    description: 自动回复的文本
+  enabled:
+    type: bool
+    default: true
+    description: 是否启用自动回复
