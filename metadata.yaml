@@ -1,16 +1,7 @@
-name: auto_reply_mention_or_quote
-version: 1.0.0
-description: 当机器人被 @ 或被引用时，自动回复指定内容
-author: mjy1113451
-license: MIT
-homepage: https://github.com/mjy1113451/astrbot_plugin_auto_reply_mention_or_quote
+name: "astrbot_plugin_auto_reply_mention_or_quote"
+display_name: "智能回复提及与引用"
+desc: "智能检测消息中是否 @ 了机器人自身或引用了机器人自身的消息，并使用配置的模型进行回复。"
+short_desc: "@或引用机器人时智能回复"
+author: "mjy1113451"
+version: "0.01"
 
-conf_schema:
-  reply_text:
-    type: string
-    default: "收到！"
-    description: 自动回复的文本
-  enabled:
-    type: bool
-    default: true
-    description: 是否启用自动回复
