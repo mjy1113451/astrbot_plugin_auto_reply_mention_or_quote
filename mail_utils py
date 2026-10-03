@@ -1,0 +1,69 @@
+import re
+from email.header import decode_header
+
+
+def _decode_bytes(value: bytes, charset: str | None) -> str:
+    """Decode bytes with conservative fallbacks for non-standard mail charsets."""
+    normalized = (charset or "utf-8").strip().lower()
+    if normalized in {"unknown-8bit", "unknown8bit"}:
+        normalized = "latin-1"
+
+    for candidate in (normalized, "utf-8", "latin-1"):
+        try:
+            return value.decode(candidate, errors="replace")
+        except LookupError:
+            continue
+        except UnicodeDecodeError:
+            continue
+
+    return value.decode("utf-8", errors="replace")
+
+
+def decode_mime_header(value: str) -> str:
+    """Decode a MIME encoded header value to plain text."""
+    if not value:
+        return ""
+    parts = decode_header(value)
+    decoded = []
+    for part, charset in parts:
+        if isinstance(part, bytes):
+            decoded.append(_decode_bytes(part, charset))
+        else:
+            decoded.append(part)
+    return "".join(decoded)
+
+
+def truncate_text(value: str, max_length: int) -> str:
+    """Trim text to the configured preview length."""
+    if max_length <= 0 or len(value) <= max_length:
+        return value
+    return value[:max_length] + "..."
+
+
+def extract_text_body(msg) -> str:
+    """Extract plain text body content from an email message."""
+    body = ""
+    if msg.is_multipart():
+        for part in msg.walk():
+            ctype = part.get_content_type()
+            if ctype == "text/plain":
+                payload = part.get_payload(decode=True)
+                if payload:
+                    body = _decode_bytes(payload, part.get_content_charset())
+                    break
+            elif ctype == "text/html" and not body:
+                payload = part.get_payload(decode=True)
+                if payload:
+                    html = _decode_bytes(payload, part.get_content_charset())
+                    body = re.sub(r"<[^>]+>", "", html)
+                    body = re.sub(r"\s+", " ", body).strip()
+    else:
+        payload = msg.get_payload(decode=True)
+        if payload:
+            text = _decode_bytes(payload, msg.get_content_charset())
+            if msg.get_content_type() == "text/html":
+                text = re.sub(r"<[^>]+>", "", text)
+                text = re.sub(r"\s+", " ", text).strip()
+            body = text
+
+    return body.strip()
